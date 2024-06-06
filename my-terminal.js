@@ -1,4 +1,5 @@
 const commands = {};
+const font = "ANSI Shadow";
 
 const term = $("body").terminal(commands, {
   greetings: false,
@@ -21,13 +22,15 @@ function render(text) {
 
 function ready() {
   term
-    .echo(() => {
-      const ascii = render("Bakulesh Singh");
-      return `${ascii}\nWelcome to my Portfolio!`;
-    })
+    .echo(
+      () => {
+        const ascii = render("Bakulesh Singh");
+        return `${ascii}\nWelcome to my Portfolio!`;
+      },
+      { ansi: true }
+    )
     .resume();
 }
-const font = "Slant";
 
 figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
 figlet.preloadFonts([font], ready);
