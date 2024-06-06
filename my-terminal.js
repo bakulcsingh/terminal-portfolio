@@ -20,15 +20,30 @@ function render(text) {
   );
 }
 
+function hex(color) {
+  return (
+    "#" +
+    [color.red, color.green, color.blue]
+      .map((n) => {
+        return n.toString(16).padStart(2, "0");
+      })
+      .join("")
+  );
+}
+
+function rainbow(string) {
+  return lolcat
+    .rainbow(function (char, color) {
+      char = $.terminal.escape_brackets(char);
+      return `[[;${hex(color)};]${char}]`;
+    }, string)
+    .join("\n");
+}
+
 function ready() {
   term
-    .echo(
-      () => {
-        const ascii = render("Bakulesh Singh");
-        return `${ascii}\nWelcome to my Portfolio!`;
-      },
-      { ansi: true }
-    )
+    .echo(() => rainbow(render("Bakulesh Singh")), { ansi: true })
+    .echo("<white>Welcome to my Terminal Portfolio\n</white>")
     .resume();
 }
 
