@@ -1,9 +1,29 @@
-const commands = {};
+const commands = {
+  help() {
+    term.echo(`List of available commands: ${help}`);
+  },
+  echo(...args) {
+    term.echo(args.join(" "));
+  },
+};
 const font = "ANSI Shadow";
 
 const term = $("body").terminal(commands, {
   greetings: false,
+  checkArity: false,
+  exit: false,
 });
+
+const formatter = new Intl.ListFormat("en", {
+  style: "long",
+  type: "conjunction",
+});
+
+const command_list = ["clear"].concat(Object.keys(commands));
+const formatted_list = command_list.map(cmd => {
+    return `<white class="command">${cmd}</white>`;
+});
+const help = formatter.format(formatted_list);
 
 function trim(str) {
   return str.replace(/[\n\s]+$/, "");
@@ -43,7 +63,8 @@ function rainbow(string) {
 function ready() {
   term
     .echo(() => rainbow(render("Bakulesh Singh")), { ansi: true })
-    .echo("<white>Welcome to my Terminal Portfolio\n</white>")
+    .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
+    .echo("<blue>Always a good idea to try help\n</blue>")
     .resume();
 }
 
