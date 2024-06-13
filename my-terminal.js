@@ -1,3 +1,7 @@
+//Define
+const root = "~";
+let cwd = root;
+
 // Define the commands
 const commands = {
   help() {
@@ -106,6 +110,43 @@ const directories = {
     ["BluePrism", "git", "UiPath"].map((lib) => `* <blue>${lib}</blue>`),
     "",
   ].flat(),
+  experience: [
+    "",
+    "<white>Experience</white>",
+    [
+      [
+        "JP Morgan Chase Bank",
+        "Senior Software Engineer",
+        "2023-Present",
+        "https://www.jpmorganchase.com/",
+        "developing a web application to super power the sales team's operations and bespoke solutions to transfer accounts from FRB to JPMC",
+      ],
+      [
+        "First Republic Bank",
+        "Senior Software Engineer, Continuous Process Improvement",
+        "2018-2023",
+        "https://www.firstrepublic.com/",
+        "served as the technology agnostic developer of technology solutions empowering colleagues to improve processes and increase operational efficiency, reduce risk and improve client experience",
+      ],
+      [
+        "Tynor Othotics",
+        "Assistant Manager, Industrial Engineering",
+        "2015-2017",
+        "https://www.tynorstore.com/",
+        "championed the lean transformation of operations and adoption of six sigma at India's top orthopedic aids manufacturer",
+      ],
+      [
+        "The Smart Cube",
+        "Business Analyst",
+        "2013-2015",
+        "https://www.thesmartcube.com/",
+        "provided knowledge support to clients by conducting extensive primary and secondary research and enabled better informed business decisions (supplier research, market estimation, commodity tracking)",
+      ],
+    ].map(([name, title, tenure, url, description = ""]) => {
+      return `* <a href="${url}">${name}</a> &ndash; <i>${title}</i>, ${tenure}  &mdash; <white>${description}</white>`;
+    }),
+    "",
+  ].flat(),
 };
 
 const dirs = Object.keys(directories);
@@ -127,9 +168,6 @@ const server = "bakulPortfolio";
 function prompt() {
   return `<green>${user}@${server}</green>:<blue>${cwd}</blue>$ `;
 }
-
-const root = "~";
-let cwd = root;
 
 $.terminal.xml_formatter.tags.green = (attrs) => {
   return `[[;#44D544;]`;
@@ -203,6 +241,7 @@ function rainbow(string) {
 }
 
 // function that is called once fonts are ready
+//TODO add linkedin profile link here
 function ready() {
   term
     .echo(() => rainbow(render("Bakulesh Singh")), { ansi: true })
@@ -216,10 +255,10 @@ figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
 figlet.preloadFonts([font], ready);
 
 // Regex to return 2 capture groups: command and arguments
-const valid_command_re = new RegExp(`^\s*(${command_list.join("|")}) (.*)`);
+// const valid_command_re = new RegExp(`^\s*(${command_list.join("|")}) (.*)`);
 
-$.terminal.new_formatter(function (string) {
-  return string.replace(valid_command_re, function (_, command, args) {
-    return `<green>${command}</green><white>${args}</white>`;
-  });
-});
+// $.terminal.new_formatter(function (string) {
+//   return string.replace(valid_command_re, function (_, command, args) {
+//     return `<green>${command}</green><white>${args}</white>`;
+//   });
+// });
