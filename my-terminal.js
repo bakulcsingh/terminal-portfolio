@@ -84,7 +84,7 @@ const commands = {
         "<white>Contact Information:</white>",
         "",
         `<yellow>Email:</yellow> <white>${email}</white>`,
-        `<yellow>LinkedIn:</yellow> <a href="${social.linkedin}">linkedin.com/in/bakulsingh</a>`,
+        `<yellow>LinkedIn:</yellow> <a href="${social.linkedin}">linkedin.com/in/bakuleshsingh/</a>`,
         `<yellow>GitHub:</yellow> <a href="${social.github}">github.com/bakulcsingh</a>`,
         "",
       ].join("\n")
