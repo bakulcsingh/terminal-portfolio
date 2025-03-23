@@ -1,18 +1,19 @@
-//Define
 const root = "~";
 let cwd = root;
 
-// Define the commands
+// Use configuration from config.js
+const { user, server, email, social, directories } = portfolioConfig;
+
 const commands = {
   help() {
-    term.echo('Available commands:\n');
+    term.echo("Available commands:\n");
     const commandHelp = {
-      help: 'Show this help message',
-      ls: 'List directory contents',
-      cd: 'Change directory',
-      echo: 'Print text to terminal',
-      clear: 'Clear terminal screen',
-      contact: 'Display contact information'
+      help: "Show this help message",
+      ls: "List directory contents",
+      cd: "Change directory",
+      echo: "Print text to terminal",
+      clear: "Clear terminal screen",
+      contact: "Display contact information",
     };
     for (const [cmd, desc] of Object.entries(commandHelp)) {
       term.echo(`${cmd.padEnd(10)} - ${desc}`);
@@ -67,110 +68,63 @@ const commands = {
     }
   },
   contact() {
-    term.echo([
-      '<white>Contact Information:</white>',
-      '',
-      '<yellow>Email:</yellow> <white>bakulsingh@example.com</white>',
-      '<yellow>LinkedIn:</yellow> <a href="https://linkedin.com/in/bakulsingh">linkedin.com/in/bakulsingh</a>',
-      '<yellow>GitHub:</yellow> <a href="https://github.com/bakulcsingh">github.com/bakulcsingh</a>',
-      ''
-    ].join('\n'));
-  }
+    term.echo(
+      [
+        "<white>Contact Information:</white>",
+        "",
+        `<yellow>Email:</yellow> <white>${email}</white>`,
+        `<yellow>LinkedIn:</yellow> <a href="${social.linkedin}">linkedin.com/in/bakulsingh</a>`,
+        `<yellow>GitHub:</yellow> <a href="${social.github}">github.com/bakulcsingh</a>`,
+        "",
+      ].join("\n")
+    );
+  },
 };
 
-const directories = {
-  education: [
+// Convert config data to terminal format
+const formatDirectories = {
+  education: () => [
     "",
     "<white>Education</white>",
-
-    '* <a href="https://en.wikipedia.org/wiki/Punjab_Engineering_College">Punjab Engineering College</a> <yellow>"BE, Mechanical Engineering"</yellow> 2009-2013',
-    '* <a href="https://en.wikipedia.org/wiki/Cornell_University">Cornell University</a> <yellow>"MEng, Systems Engineering"</yellow> 2017-2018',
-    "",
-  ],
-  projects: [
-    "",
-    "<white>Projects</white>",
-    [
-      [
-        "Instant Guru",
-        "https://instantguru.vercel.app/",
-        "leverages the power of LLMs and RAG to give you the opportunity to ask questions of a chatbot that knows everything about your PDF",
-      ],
-      [
-        "Cervical Cancer Risk Prediction",
-        "https://github.com/bakulcsingh/CervicalCancerBiopsyPrediction/tree/master/Final",
-        "machine learning model to capture the risk of cervical cancer in women, based on behavioral risk factors",
-      ],
-      [
-        "Cornell Carbon Neutral Initiative",
-        "https://ctech.cee.cornell.edu/files/2018/02/ElectricVehicleChargingStations-xwvz4k.pdf",
-        "mathematical models to plan charging site locations presented at the Cornell Sustainable Leadership Summit '17",
-      ],
-      [
-        "Crowdfunded Startup Risk Prediction",
-        "https://github.com/bakulcsingh/CrowdfundingStartupRiskPrediction",
-        "machine learning model to predict the risk of a crowdfunded startup failing",
-      ],
-    ].map(([name, url, description = ""]) => {
-      return `* <a href="${url}">${name}</a> &mdash; <white>${description}</white>`;
-    }),
-    "",
-  ].flat(),
-  skills: [
-    "",
-    "<white>Languages</white>",
-
-    ["JavaScript", "TypeScript", "Python", "SQL", "HTML", "CSS"].map(
-      (lang) => `* <yellow>${lang}</yellow>`
+    ...directories.education.map(
+      ({ institution, degree, period, url }) =>
+        `* <a href="${url}">${institution}</a> <yellow>"${degree}"</yellow> ${period}`
     ),
     "",
+  ],
+  projects: () => [
+    "",
+    "<white>Projects</white>",
+    ...directories.projects.map(
+      ({ name, url, description }) =>
+        `* <a href="${url}">${name}</a> &mdash; <white>${description}</white>`
+    ),
+    "",
+  ],
+  skills: () => [
+    "",
+    "<white>Languages</white>",
+    ...directories.skills.languages.map((lang) => `* <yellow>${lang}</yellow>`),
+    "",
     "<white>Libraries</white>",
-    ["React.js", "Jest"].map((lib) => `* <green>${lib}</green>`),
+    ...directories.skills.libraries.map((lib) => `* <green>${lib}</green>`),
     "",
     "<white>Tools</white>",
-    ["BluePrism", "git", "UiPath"].map((lib) => `* <blue>${lib}</blue>`),
+    ...directories.skills.tools.map((tool) => `* <blue>${tool}</blue>`),
     "",
-  ].flat(),
-  experience: [
+  ],
+  experience: () => [
     "",
     "<white>Experience</white>",
-    [
-      [
-        "JP Morgan Chase Bank",
-        "Senior Software Engineer",
-        "2023-Present",
-        "https://www.jpmorganchase.com/",
-        "developing a web application to super power the sales team's operations and bespoke solutions to transfer accounts from FRB to JPMC",
-      ],
-      [
-        "First Republic Bank",
-        "Senior Software Engineer, Continuous Process Improvement",
-        "2018-2023",
-        "https://www.firstrepublic.com/",
-        "served as the technology agnostic developer of technology solutions empowering colleagues to improve processes and increase operational efficiency, reduce risk and improve client experience",
-      ],
-      [
-        "Tynor Othotics",
-        "Assistant Manager, Industrial Engineering",
-        "2015-2017",
-        "https://www.tynorstore.com/",
-        "championed the lean transformation of operations and adoption of six sigma at India's top orthopedic aids manufacturer",
-      ],
-      [
-        "The Smart Cube",
-        "Business Analyst",
-        "2013-2015",
-        "https://www.thesmartcube.com/",
-        "provided knowledge support to clients by conducting extensive primary and secondary research and enabled better informed business decisions (supplier research, market estimation, commodity tracking)",
-      ],
-    ].map(([name, title, tenure, url, description = ""]) => {
-      return `* <a href="${url}">${name}</a> &ndash; <i>${title}</i>, ${tenure}  &mdash; <white>${description}</white>`;
-    }),
+    ...directories.experience.map(
+      ({ company, title, period, url, description }) =>
+        `* <a href="${url}">${company}</a> &ndash; <i>${title}</i>, ${period} &mdash; <white>${description}</white>`
+    ),
     "",
-  ].flat(),
+  ],
 };
 
-const dirs = Object.keys(directories);
+const dirs = Object.keys(formatDirectories);
 
 function print_dirs() {
   term.echo(
@@ -183,9 +137,6 @@ function print_dirs() {
 }
 
 //create a custom prompt to display the user and server
-const user = "guest";
-const server = "bakulPortfolio";
-
 function prompt() {
   return `<green>${user}@${server}</green>:<blue>${cwd}</blue>$ `;
 }
@@ -278,13 +229,15 @@ figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
 figlet.preloadFonts([font], ready);
 
 // Add command suggestion for invalid commands
-term.on('command', function(command) {
-  if (!commands[command.split(' ')[0]] && command !== 'clear') {
-    const similarCommands = Object.keys(commands).filter(cmd => 
-      cmd.startsWith(command.split(' ')[0])
+term.on("command", function (command) {
+  if (!commands[command.split(" ")[0]] && command !== "clear") {
+    const similarCommands = Object.keys(commands).filter((cmd) =>
+      cmd.startsWith(command.split(" ")[0])
     );
     if (similarCommands.length) {
-      term.echo(`Command not found. Did you mean: ${similarCommands.join(', ')}?`);
+      term.echo(
+        `Command not found. Did you mean: ${similarCommands.join(", ")}?`
+      );
     } else {
       term.echo('Command not found. Type "help" for available commands.');
     }
