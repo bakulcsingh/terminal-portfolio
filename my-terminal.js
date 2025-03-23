@@ -47,11 +47,15 @@ const commands = {
           this.error("Invalid directory");
         } else {
           const dir = dirs[0];
-          this.echo(directories[dir].join("\n"));
+          if (formatDirectories[dir]) {
+            this.echo(formatDirectories[dir]().join("\n"));
+          } else {
+            this.error("Invalid directory");
+          }
         }
       } else if (cwd === root) {
-        if (dir in directories) {
-          this.echo(directories[dir].join("\n"));
+        if (formatDirectories[dir]) {
+          this.echo(formatDirectories[dir]().join("\n"));
         } else {
           this.error("Invalid directory");
         }
@@ -64,7 +68,11 @@ const commands = {
       print_dirs();
     } else {
       const dir = cwd.substring(2);
-      this.echo(directories[dir].join("\n"));
+      if (formatDirectories[dir]) {
+        this.echo(formatDirectories[dir]().join("\n"));
+      } else {
+        this.error("Invalid directory");
+      }
     }
   },
   contact() {
@@ -149,35 +157,8 @@ $.terminal.xml_formatter.tags.blue = (attrs) => {
   return `[[;#55F;;${attrs.class}]`;
 };
 
-// Define terminal configuration
-const term = $("body").terminal(commands, {
-  greetings: false,
-  checkArity: false,
-  exit: false,
-  completion: true,
-  prompt,
-});
-
-// Initialize the terminal
-term.on("click", ".command", function () {
-  const command = $(this).text();
-  term.exec(command);
-});
-
-const formatter = new Intl.ListFormat("en", {
-  style: "long",
-  type: "conjunction",
-});
-
-const command_list = ["clear"].concat(Object.keys(commands));
-const formatted_list = command_list.map((cmd) => {
-  return `<yellow class="command">${cmd}</yellow>`;
-});
-const help = formatter.format(formatted_list);
-
-function trim(str) {
-  return str.replace(/[\n\s]+$/, "");
-}
+// Remove the existing terminal initialization and move it inside ready()
+let term;
 
 // Define the font style and color of the welcome message
 const font = "ANSI Shadow";
@@ -215,40 +196,92 @@ function rainbow(string) {
 // function that is called once fonts are ready
 //TODO add linkedin profile link here
 function ready() {
-  term
-    .echo(() => rainbow(render("Bakulesh Singh")), { ansi: true })
-    .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
-    .echo("<white>Type 'help' to see available commands.</white>")
-    .echo("<white>Type 'contact' to see my contact information.</white>")
-    .echo("<white>PS: Try adjusting your window size\n</white>")
-    .resume();
-}
+  try {
+    // Initialize terminal only after fonts are loaded
+    term = $("body").terminal(commands, {
+      greetings: "",
+      checkArity: false,
+      exit: false,
+      completion: true,
+      prompt,
+    });
 
-// Load the fonts and call ready function
-figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
-figlet.preloadFonts([font], ready);
+    const renderedText = render("Bakulesh Singh");
+    if (!renderedText) {
+      throw new Error("Failed to render text");
+    }
 
-// Add command suggestion for invalid commands
-term.on("command", function (command) {
-  if (!commands[command.split(" ")[0]] && command !== "clear") {
-    const similarCommands = Object.keys(commands).filter((cmd) =>
-      cmd.startsWith(command.split(" ")[0])
-    );
-    if (similarCommands.length) {
-      term.echo(
-        `Command not found. Did you mean: ${similarCommands.join(", ")}?`
-      );
-    } else {
-      term.echo('Command not found. Type "help" for available commands.');
+    term
+      .echo(() => rainbow(renderedText), { ansi: true })
+      .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
+      .echo("<white>Type 'help' to see available commands.</white>")
+      .echo("<white>Type 'contact' to see my contact information.</white>")
+      .echo("<white>PS: Try adjusting your window size\n</white>")
+      .resume();
+  } catch (error) {
+    console.error("Error initializing terminal:", error);
+    // Fallback to basic initialization if ANSI art fails
+    if (!term) {
+      term = $("body").terminal(commands, {
+        greetings: "Welcome to Bakulesh Singh's Portfolio",
+        checkArity: false,
+        exit: false,
+        completion: true,
+        prompt,
+      });
     }
   }
+}
+
+// Update font loading with proper error handling
+console.log("Loading fonts...");
+figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
+figlet.preloadFonts([font], function (err) {
+  if (err) {
+    console.error("Error loading fonts:", err);
+  }
+  ready();
 });
 
-// Regex to return 2 capture groups: command and arguments
-// const valid_command_re = new RegExp(`^\s*(${command_list.join("|")}) (.*)`);
+// Add command suggestion for invalid commands
+function initializeEventHandlers() {
+  if (!term) return;
 
-// $.terminal.new_formatter(function (string) {
-//   return string.replace(valid_command_re, function (_, command, args) {
-//     return `<green>${command}</green><white>${args}</white>`;
-//   });
-// });
+  term.on("command", function (command) {
+    if (!commands[command.split(" ")[0]] && command !== "clear") {
+      const similarCommands = Object.keys(commands).filter((cmd) =>
+        cmd.startsWith(command.split(" ")[0])
+      );
+      if (similarCommands.length) {
+        term.echo(
+          `Command not found. Did you mean: ${similarCommands.join(", ")}?`
+        );
+      } else {
+        term.echo('Command not found. Type "help" for available commands.');
+      }
+    }
+  });
+
+  term.on("click", ".command", function () {
+    const command = $(this).text();
+    term.exec(command);
+  });
+}
+
+// Call event handler initialization after ready
+setTimeout(initializeEventHandlers, 100);
+
+const formatter = new Intl.ListFormat("en", {
+  style: "long",
+  type: "conjunction",
+});
+
+const command_list = ["clear"].concat(Object.keys(commands));
+const formatted_list = command_list.map((cmd) => {
+  return `<yellow class="command">${cmd}</yellow>`;
+});
+const help = formatter.format(formatted_list);
+
+function trim(str) {
+  return str.replace(/[\n\s]+$/, "");
+}
