@@ -160,88 +160,45 @@ $.terminal.xml_formatter.tags.blue = (attrs) => {
 // Remove the existing terminal initialization and move it inside ready()
 let term;
 
-// Define the font style and color of the welcome message
-const font = "ANSI Shadow";
-function render(text) {
-  const cols = term.cols();
-  return trim(
-    figlet.textSync(text, {
-      font: font,
-      width: cols,
-      whitespaceBreak: true,
-    })
-  );
-}
+// Replace everything from const font declaration to initializeTerminal() with:
+const asciiArt = `
+██████╗  █████╗ ██╗  ██╗██╗   ██╗██╗     
+██╔══██╗██╔══██╗██║ ██╔╝██║   ██║██║     
+██████╔╝███████║█████╔╝ ██║   ██║██║     
+██╔══██╗██╔══██║██╔═██╗ ██║   ██║██║     
+██████╔╝██║  ██║██║  ██╗╚██████╔╝███████╗
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+`;
 
-function hex(color) {
-  return (
-    "#" +
-    [color.red, color.green, color.blue]
-      .map((n) => {
-        return n.toString(16).padStart(2, "0");
-      })
-      .join("")
-  );
-}
-
-function rainbow(string) {
-  return lolcat
-    .rainbow(function (char, color) {
-      char = $.terminal.escape_brackets(char);
-      return `[[;${hex(color)};]${char}]`;
-    }, string)
-    .join("\n");
-}
-
-// function that is called once fonts are ready
-//TODO add linkedin profile link here
-function ready() {
+function initializeTerminal() {
+  console.log("Initializing terminal...");
   try {
-    // Initialize terminal only after fonts are loaded
     term = $("body").terminal(commands, {
-      greetings: "",
+      greetings: false,
       checkArity: false,
       exit: false,
       completion: true,
       prompt,
     });
 
-    const renderedText = render("Bakulesh Singh");
-    if (!renderedText) {
-      throw new Error("Failed to render text");
-    }
-
-    term
-      .echo(() => rainbow(renderedText), { ansi: true })
-      .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
-      .echo("<white>Type 'help' to see available commands.</white>")
-      .echo("<white>Type 'contact' to see my contact information.</white>")
-      .echo("<white>PS: Try adjusting your window size\n</white>")
-      .resume();
+    // Display ASCII art with color
+    term.echo(`[[;#44D544;]${asciiArt}]`)
+        .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
+        .echo("<white>Type 'help' to see available commands.</white>")
+        .echo("<white>Type 'contact' to see my contact information.\n</white>")
   } catch (error) {
-    console.error("Error initializing terminal:", error);
-    // Fallback to basic initialization if ANSI art fails
-    if (!term) {
-      term = $("body").terminal(commands, {
-        greetings: "Welcome to Bakulesh Singh's Portfolio",
-        checkArity: false,
-        exit: false,
-        completion: true,
-        prompt,
-      });
-    }
+    console.error("Terminal initialization error:", error);
+    document.body.innerHTML = "Error loading terminal. Please refresh the page.";
   }
 }
 
-// Update font loading with proper error handling
-console.log("Loading fonts...");
-figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
-figlet.preloadFonts([font], function (err) {
-  if (err) {
-    console.error("Error loading fonts:", err);
-  }
-  ready();
-});
+// Replace the ready() function with a simpler version
+function ready() {
+  initializeTerminal();
+}
+
+// Call ready() when document is fully loaded
+$(document).ready(ready);
 
 // Add command suggestion for invalid commands
 function initializeEventHandlers() {
