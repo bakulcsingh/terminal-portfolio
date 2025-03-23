@@ -2,6 +2,7 @@ const root = "~";
 let cwd = root;
 
 // Use configuration from config.js
+// Test comment
 const { user, server, email, social, directories } = portfolioConfig;
 
 const commands = {
