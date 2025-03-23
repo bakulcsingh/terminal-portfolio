@@ -1,3 +1,18 @@
 .command {
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.command:hover {
+  opacity: 0.8;
+}
+
+a {
+  text-decoration: none;
+  border-bottom: 1px dashed;
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
 }

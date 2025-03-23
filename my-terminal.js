@@ -5,7 +5,18 @@ let cwd = root;
 // Define the commands
 const commands = {
   help() {
-    term.echo(`List of available commands: ${help}`);
+    term.echo('Available commands:\n');
+    const commandHelp = {
+      help: 'Show this help message',
+      ls: 'List directory contents',
+      cd: 'Change directory',
+      echo: 'Print text to terminal',
+      clear: 'Clear terminal screen',
+      contact: 'Display contact information'
+    };
+    for (const [cmd, desc] of Object.entries(commandHelp)) {
+      term.echo(`${cmd.padEnd(10)} - ${desc}`);
+    }
   },
   echo(...args) {
     if (args.length > 0) {
@@ -55,6 +66,16 @@ const commands = {
       this.echo(directories[dir].join("\n"));
     }
   },
+  contact() {
+    term.echo([
+      '<white>Contact Information:</white>',
+      '',
+      '<yellow>Email:</yellow> <white>bakulsingh@example.com</white>',
+      '<yellow>LinkedIn:</yellow> <a href="https://linkedin.com/in/bakulsingh">linkedin.com/in/bakulsingh</a>',
+      '<yellow>GitHub:</yellow> <a href="https://github.com/bakulcsingh">github.com/bakulcsingh</a>',
+      ''
+    ].join('\n'));
+  }
 };
 
 const directories = {
@@ -246,13 +267,29 @@ function ready() {
   term
     .echo(() => rainbow(render("Bakulesh Singh")), { ansi: true })
     .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
-    .echo("<white>Always a good idea to try help\n</white>")
+    .echo("<white>Type 'help' to see available commands.</white>")
+    .echo("<white>Type 'contact' to see my contact information.</white>")
+    .echo("<white>PS: Try adjusting your window size\n</white>")
     .resume();
 }
 
 // Load the fonts and call ready function
 figlet.defaults({ fontPath: "https://unpkg.com/figlet/fonts/" });
 figlet.preloadFonts([font], ready);
+
+// Add command suggestion for invalid commands
+term.on('command', function(command) {
+  if (!commands[command.split(' ')[0]] && command !== 'clear') {
+    const similarCommands = Object.keys(commands).filter(cmd => 
+      cmd.startsWith(command.split(' ')[0])
+    );
+    if (similarCommands.length) {
+      term.echo(`Command not found. Did you mean: ${similarCommands.join(', ')}?`);
+    } else {
+      term.echo('Command not found. Type "help" for available commands.');
+    }
+  }
+});
 
 // Regex to return 2 capture groups: command and arguments
 // const valid_command_re = new RegExp(`^\s*(${command_list.join("|")}) (.*)`);
