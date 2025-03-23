@@ -9,14 +9,17 @@ const commands = {
     term.echo("Available commands:\n");
     const commandHelp = {
       help: "Show this help message",
+      about: "Learn about me",
+      projects: "View my projects",
+      experience: "View my work experience",
+      skills: "View my technical skills",
+      contact: "Display contact information",
+      clear: "Clear terminal screen",
       ls: "List directory contents",
       cd: "Change directory",
-      echo: "Print text to terminal",
-      clear: "Clear terminal screen",
-      contact: "Display contact information",
     };
     for (const [cmd, desc] of Object.entries(commandHelp)) {
-      term.echo(`${cmd.padEnd(10)} - ${desc}`);
+      term.echo(`${cmd.padEnd(12)} - ${desc}`);
     }
   },
   echo(...args) {
@@ -87,6 +90,32 @@ const commands = {
       ].join("\n")
     );
   },
+  about() {
+    term.echo(
+      [
+        "<white>About Me</white>",
+        "",
+        "Hi! I'm Bakul Singh, a Full Stack Engineer passionate about building innovative solutions.",
+        "I have experience in web development, AI integration, and process automation.",
+        "",
+        "<white>Quick Navigation:</white>",
+        "• Type 'experience' to see my work history",
+        "• Type 'projects' to view my projects",
+        "• Type 'skills' to see my technical skills",
+        "• Type 'contact' to get in touch",
+        "",
+      ].join("\n")
+    );
+  },
+  projects() {
+    term.echo(formatDirectories.projects().join("\n"));
+  },
+  experience() {
+    term.echo(formatDirectories.experience().join("\n"));
+  },
+  skills() {
+    term.echo(formatDirectories.skills().join("\n"));
+  },
 };
 
 // Convert config data to terminal format
@@ -135,10 +164,17 @@ const formatDirectories = {
 const dirs = Object.keys(formatDirectories);
 
 function print_dirs() {
+  const dirDescriptions = {
+    education: "🎓 Education History",
+    projects: "💻 My Projects",
+    skills: "🛠️ Technical Skills",
+    experience: "💼 Work Experience",
+  };
+
   term.echo(
     dirs
       .map((dir) => {
-        return `<blue class="directory">${dir}</blue>`;
+        return `<blue class="directory">${dirDescriptions[dir] || dir}</blue>`;
       })
       .join("\n")
   );
@@ -157,10 +193,6 @@ $.terminal.xml_formatter.tags.blue = (attrs) => {
   return `[[;#55F;;${attrs.class}]`;
 };
 
-// Remove the existing terminal initialization and move it inside ready()
-let term;
-
-// Replace everything from const font declaration to initializeTerminal() with:
 const asciiArt = `
 ██████╗  █████╗ ██╗  ██╗██╗   ██╗██╗     
 ██╔══██╗██╔══██╗██║ ██╔╝██║   ██║██║     
@@ -173,6 +205,19 @@ const asciiArt = `
 function initializeTerminal() {
   console.log("Initializing terminal...");
   try {
+    // Clear existing buttons
+    $("#command-buttons").empty();
+
+    // Create command buttons
+    const commonCommands = ["about", "experience", "projects", "contact"];
+    commonCommands.forEach((cmd) => {
+      const button = $(`<button class="cmd-btn">${cmd}</button>`);
+      button.on("click", function () {
+        term.exec(cmd);
+      });
+      $("#command-buttons").append(button);
+    });
+
     term = $("body").terminal(commands, {
       greetings: false,
       checkArity: false,
@@ -181,14 +226,23 @@ function initializeTerminal() {
       prompt,
     });
 
-    // Display ASCII art with color
-    term.echo(`[[;#44D544;]${asciiArt}]`)
-        .echo("<white>Welcome to my Portfolio in the Terminal.</white>")
-        .echo("<white>Type 'help' to see available commands.</white>")
-        .echo("<white>Type 'contact' to see my contact information.\n</white>")
+    // Display welcome message
+    term
+      .echo(`[[;#44D544;]${asciiArt}]`)
+      .echo("<white>👋 Welcome to my Interactive Portfolio!</white>")
+      .echo("<white>You can either:</white>")
+      .echo("  • Click the command buttons above for quick navigation")
+      .echo("  • Type commands in the terminal (try typing 'help')")
+      .echo("  • Click on any blue text to explore that section")
+      .echo("\n<white>Popular commands:</white>")
+      .echo("  • about    - Learn about me")
+      .echo("  • projects - View my projects")
+      .echo("  • contact  - Get my contact information")
+      .echo("");
   } catch (error) {
     console.error("Terminal initialization error:", error);
-    document.body.innerHTML = "Error loading terminal. Please refresh the page.";
+    document.body.innerHTML =
+      "Error loading terminal. Please refresh the page.";
   }
 }
 
