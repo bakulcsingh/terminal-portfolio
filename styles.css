@@ -16,3 +16,52 @@ a {
 a:hover {
   opacity: 0.8;
 }
+
+.command-buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 1px solid #44D544;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: auto;
+  max-width: 90%;
+}
+
+.cmd-btn {
+  background: #2E2E2E;
+  color: #44D544;
+  border: 2px solid #44D544;
+  border-radius: 5px;
+  padding: 8px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+  text-transform: capitalize;
+  min-width: 100px;
+}
+
+.cmd-btn:hover {
+  background: #44D544;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.directory {
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.directory:hover {
+  background: rgba(85, 255, 255, 0.2);
+}
