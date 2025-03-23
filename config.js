@@ -3,7 +3,7 @@ const portfolioConfig = {
   server: "bakulPortfolio",
   email: "bakulsingh@example.com",
   social: {
-    linkedin: "https://linkedin.com/in/bakulsingh",
+    linkedin: "https://www.linkedin.com/in/bakuleshsingh/",
     github: "https://github.com/bakulcsingh",
   },
   directories: {
