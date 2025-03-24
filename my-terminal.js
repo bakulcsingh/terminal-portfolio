@@ -232,7 +232,7 @@ function initializeTerminal() {
       .echo(`[[;#44D544;]${asciiArt}]`)
       .echo("<white>👋 Welcome to my Interactive Portfolio!</white>")
       .echo("<white>You can either:</white>")
-      .echo("  • Click the command buttons above for quick navigation")
+      .echo("  • Click the command buttons below for quick navigation")
       .echo("  • Type commands in the terminal (try typing 'help')")
       .echo("  • Click on any blue text to explore that section")
       .echo("\n<white>Popular commands:</white>")
