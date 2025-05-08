@@ -28,7 +28,12 @@ const portfolioConfig = {
         description:
           "leverages the power of LLMs and RAG to give you the opportunity to ask questions of a chatbot that knows everything about your PDF",
       },
-      // Add more projects here
+       {
+        name: "Expense Tracker",
+        url: "https://github.com/bakulcsingh/expense-tracker.git",
+        description:
+          "comprehensive financial management tool that empowers you to track expenses, set budgets, and visualize your spending patterns through an elegant Django-powered interface.",
+      },
     ],
     skills: {
       languages: ["JavaScript", "TypeScript", "Python", "SQL", "HTML", "CSS"],
