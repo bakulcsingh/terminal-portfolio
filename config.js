@@ -24,7 +24,7 @@ const portfolioConfig = {
     projects: [
       {
         name: "Instant Guru",
-        url: "https://instantguru.vercel.app/",
+        url: "https://github.com/bakulcsingh/instantguru",
         description:
           "leverages the power of LLMs and RAG to give you the opportunity to ask questions of a chatbot that knows everything about your PDF",
       },
@@ -47,24 +47,16 @@ const portfolioConfig = {
         period: "2024-Present",
         url: "https://offramphub.com",
         description:
-          "building AI-driven fintech solutions using Next.js, NestJS, React, and Redux with ML model integration via AWS",
+          "Core engineer for a “Bank OS” platform consolidating client lifecycle management, account opening (deposit & loan), and service operations for banks and credit unions.",
       },
       {
-        company: "JP Morgan Chase Bank",
+        company: "First Republic Bank / JPMorgan Chase",
         title: "Software Engineer",
-        period: "2023-2024",
+        period: "2018-2024",
         url: "https://www.jpmorganchase.com/",
         description:
-          "developed React/Redux-powered sales support tools with RESTful API integration and reusable component architecture",
-      },
-      {
-        company: "First Republic Bank",
-        title: "Senior Software Engineer, Continuous Process Improvement",
-        period: "2018-2023",
-        url: "https://www.firstrepublic.com/",
-        description:
-          "served as the technology agnostic developer of solutions empowering colleagues to improve processes and operational efficiency",
-      },
+          "Delivered cross-functional automation and process improvement projects in a regulated banking environment, directly impacting compliance, client onboarding, and operational efficiency.",
+      }
       // Add more experiences here
     ],
   },
